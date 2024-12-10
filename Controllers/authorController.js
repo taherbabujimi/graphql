@@ -7,18 +7,13 @@ const {
   errorResponseData,
 } = require("../services/responses");
 
-module.exports.addAuthor = async (req, res) => {
+module.exports.addAuthor = async (args) => {
   try {
-    const author = await Models.Author.create(req.body);
+    const author = await Models.Author.create(args);
 
-    return successResponseData(res, author, 200, "Author created successfully");
+    return author;
   } catch (error) {
-    return errorResponseData(
-      res,
-      "Something went wrong while adding author",
-      error.message,
-      400
-    );
+    return error;
   }
 };
 
@@ -38,6 +33,58 @@ module.exports.getOneAuthor = async (id) => {
     });
 
     return author;
+  } catch (error) {
+    return error;
+  }
+};
+
+module.exports.updateAuthor = async (args) => {
+  try {
+    let author = await Models.Author.findOne({
+      where: { id: args.id },
+    });
+
+    if (!author) {
+      throw new Error("Author not found.");
+    }
+
+    author.name = args.edits.name;
+    author.verified = args.edits.verified;
+
+    await author.save();
+
+    return author;
+  } catch (error) {
+    return error;
+  }
+};
+
+module.exports.deleteAuthor = async (args) => {
+  try {
+    const author = await Models.Author.findOne({
+      where: { id: args.id },
+    });
+
+    if (!author) {
+      throw new Error("Author not exist.");
+    }
+
+    await author.destroy();
+    console.log(author);
+
+    return author;
+  } catch (error) {
+    return error;
+  }
+};
+
+module.exports.getAuthorReviews = async (parent) => {
+  try {
+    const review = await Models.Review.findAll({
+      where: { author_id: parent.id },
+    });
+
+    return review;
   } catch (error) {
     return error;
   }

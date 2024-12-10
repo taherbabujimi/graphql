@@ -9,6 +9,8 @@ module.exports = `#graphql
         id: ID!
         rating: Int!
         content: String!
+        author_id: Int!
+        game_id: Int!
         game: Game!
         author: Author!
     }
@@ -30,8 +32,16 @@ module.exports = `#graphql
 
     type Mutation{
         addGame(game: AddGameInput): Game
-        deleteGame(id: ID!): [Game]
+        deleteGame(id: ID!): Game
         updateGame(id: ID!, edits: UpdateGameInput!): Game
+
+        addAuthor(author: AddAuthorInput): Author
+        deleteAuthor(id: ID!): Author
+        updateAuthor(id: ID!, edits: UpdateAuthorInput!): Author
+
+        addReview(review: AddReviewInput): Review
+        deleteReview(id: ID!): Review
+        updateReview(id: ID!, edits: UpdateReviewInput!): Review
     }
 
     input AddGameInput{
@@ -40,7 +50,31 @@ module.exports = `#graphql
     }
 
     input UpdateGameInput{
-        title: String!,
+        title: String,
         platform: [String!]
+    }
+
+    input AddAuthorInput{
+        name: String!,
+        verified: Boolean!
+    }
+
+    input UpdateAuthorInput{
+        name: String,
+        verified: Boolean
+    }
+
+    input AddReviewInput{
+        rating: Int!,
+        content: String!,
+        author_id: Int!,
+        game_id: Int!
+    }
+
+    input UpdateReviewInput{
+        rating: Int,
+        content: String,
+        author_id: Int,
+        game_id: Int
     }
 `;

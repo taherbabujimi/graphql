@@ -1,32 +1,36 @@
 require("dotenv").config();
-const IndexRoute = require("./Routers/IndexRoute");
+
 const Express = require("express");
 const { ApolloServer } = require("@apollo/server");
-const { startStandaloneServer } = require("@apollo/server/standalone");
-
-// For parsing the express payloads
-const app = Express();
-app.use(Express.json());
-app.use(Express.urlencoded({ extended: true }));
-
-// CORS permission
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "*");
-  res.header("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
-  next();
-});
-
-app.use("/", IndexRoute);
+const { expressMiddleware } = require("@apollo/server/express4");
+const {
+  ApolloServerPluginDrainHttpServer,
+} = require("@apollo/server/plugin/drainHttpServer");
+const http = require("http");
+const cors = require("cors");
+const bodyParser = require("body-parser");
 
 const typeDefs = require("./graphql/schema");
 
 const resolvers = require("./graphql/resolvers");
 
-const server = new ApolloServer({ typeDefs, resolvers });
+// For parsing the express payloads
+const app = Express();
+const httpServer = http.createServer(app);
 
-startStandaloneServer(server, {
-  listen: { port: 4001 },
-}).then(({ url }) => {
-  console.log(`Server running on ${url}`);
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
+
+(async () => {
+  await server.start();
+
+  app.use(cors(), bodyParser.json(), expressMiddleware(server));
+
+  new Promise((resolve) =>
+    httpServer.listen({ port: process.env.PORT }, resolve)
+  );
+  console.log(`🚀 Server ready at http://localhost:${process.env.PORT}`);
+})();

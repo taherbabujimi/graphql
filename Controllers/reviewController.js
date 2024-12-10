@@ -7,18 +7,13 @@ const {
   errorResponseData,
 } = require("../services/responses");
 
-module.exports.addReview = async (req, res) => {
+module.exports.addReview = async (args) => {
   try {
-    const review = await Models.Review.create(req.body);
+    const review = await Models.Review.create(args);
 
-    return successResponseData(res, review, 200, "Review created successfully");
+    return review;
   } catch (error) {
-    return errorResponseData(
-      res,
-      "Something went wrong while adding review",
-      error.message,
-      400
-    );
+    return error;
   }
 };
 
@@ -38,7 +33,74 @@ module.exports.getOneReview = async (id) => {
       where: { id },
     });
 
+    if (!review) {
+      throw new Error("Review not found.");
+    }
+
     return review;
+  } catch (error) {
+    return error;
+  }
+};
+
+module.exports.deleteReview = async (args) => {
+  try {
+    const review = await Models.Review.findOne({
+      where: { id: args.id },
+    });
+
+    if (!review) {
+      throw new Error("Review not found.");
+    }
+
+    return review;
+  } catch (error) {
+    return error;
+  }
+};
+
+module.exports.updateReview = async (args) => {
+  try {
+    let review = await Models.Review.findOne({
+      where: { id: args.id },
+    });
+
+    if (!review) {
+      throw new Error("Review not found.");
+    }
+
+    review.rating = args.edits.rating;
+    review.content = args.edits.content;
+    review.author_id = args.edits.author_id;
+    review.game_id = args.edits.game_id;
+
+    await review.save();
+
+    return review;
+  } catch (error) {
+    return error;
+  }
+};
+
+module.exports.getReviewAuthor = async (parent) => {
+  try {
+    let author = await Models.Author.findOne({
+      where: { id: parent.author_id },
+    });
+
+    return author;
+  } catch (error) {
+    return error;
+  }
+};
+
+module.exports.getReviewGame = async (parent) => {
+  try {
+    let game = await Models.Game.findOne({
+      where: { id: parent.game_id },
+    });
+
+    return game;
   } catch (error) {
     return error;
   }

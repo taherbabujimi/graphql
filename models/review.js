@@ -2,7 +2,11 @@
 const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
-  class Review extends Model {}
+  class Review extends Model {
+    static associate(models) {
+      this.belongsTo(models.Game, { foreignKey: { field: "game_id" } });
+    }
+  }
   Review.init(
     {
       id: {
