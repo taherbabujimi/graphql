@@ -1,0 +1,30 @@
+{
+  "name": "express-boilerplate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js",
+    "migration:create": "npx sequelize-cli migration:generate --name",
+    "migration:run": "npx sequelize-cli db:migrate",
+    "migration:undo": "npx sequelize-cli db:migrate:undo",
+    "seeder:create": "npx sequelize-cli seed:generate --name",
+    "seeder:run": "npx sequelize-cli db:seed:all",
+    "seeder:undo": "npx sequelize-cli db:seed:undo"
+  },
+  "author": "Karthik",
+  "license": "ISC",
+  "dependencies": {
+    "@apollo/server": "^4.11.2",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "graphql": "^16.9.0",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.37.5"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "nodemon": "^2.0.16"
+  }
+}
