@@ -27,12 +27,7 @@ module.exports.getAllAuthors = async (req, res) => {
     const author = await Models.Author.findAll();
     return author;
   } catch (error) {
-    return errorResponseData(
-      res,
-      "Something went wrong while fetching all authors",
-      error.message,
-      400
-    );
+    return error;
   }
 };
 
@@ -44,11 +39,6 @@ module.exports.getOneAuthor = async (id) => {
 
     return author;
   } catch (error) {
-    return errorResponseData(
-      res,
-      "Something went wrong while fetching author",
-      error.message,
-      400
-    );
+    return error;
   }
 };

@@ -28,12 +28,7 @@ module.exports.getAllGames = async (req, res) => {
 
     return games;
   } catch (error) {
-    return errorResponseData(
-      res,
-      "Something went wrong while fetching all Games",
-      error.message,
-      400
-    );
+    return error;
   }
 };
 
@@ -45,11 +40,6 @@ module.exports.getOneGame = async (id) => {
 
     return game;
   } catch (error) {
-    return errorResponseData(
-      res,
-      "Something went wrong while fetching Game",
-      error.message,
-      400
-    );
+    return error;
   }
 };
