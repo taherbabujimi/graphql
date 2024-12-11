@@ -26,6 +26,18 @@ const {
   getReviewGame,
 } = require("../Controllers/reviewController");
 
+const { PubSub } = require("graphql-subscriptions");
+
+const pubSub = new PubSub();
+
+const mockLongLastingOperation = (name) => {
+  setTimeout(() => {
+    pubSub.publish("OPERATION_FINISHED", {
+      operationFinished: { name, endDate: new Date().toDateString() },
+    });
+  }, 1000);
+};
+
 const resolvers = {
   Query: {
     games() {
@@ -106,6 +118,17 @@ const resolvers = {
 
     updateReview(_, args) {
       return updateReview(args);
+    },
+
+    scheduleOperation(_, { name }) {
+      mockLongLastingOperation(name);
+      return `Operation: ${name} scheduled!`;
+    },
+  },
+
+  Subscription: {
+    operationFinished: {
+      subscribe: () => pubSub.asyncIterableIterator("OPERATION_FINISHED"),
     },
   },
 };

@@ -42,6 +42,8 @@ module.exports = `#graphql
         addReview(review: AddReviewInput): Review
         deleteReview(id: ID!): Review
         updateReview(id: ID!, edits: UpdateReviewInput!): Review
+
+        scheduleOperation(name: String!): String!
     }
 
     input AddGameInput{
@@ -76,5 +78,14 @@ module.exports = `#graphql
         content: String,
         author_id: Int,
         game_id: Int
+    }
+
+    type Subscription {
+        operationFinished: Operation!
+    }
+
+    type Operation{
+        name: String!
+        endDate: String!
     }
 `;
