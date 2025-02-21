@@ -1,11 +1,5 @@
 const Models = require("../models/index");
 
-const {
-  validationErrorResponseData,
-  successResponseData,
-  errorResponseWithoutData,
-  errorResponseData,
-} = require("../services/responses");
 
 module.exports.addGame = async (args) => {
   try {
